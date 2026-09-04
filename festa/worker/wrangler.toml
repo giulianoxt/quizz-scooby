@@ -1,0 +1,10 @@
+name = "quizz-festa"
+main = "worker.js"
+compatibility_date = "2026-09-04"
+
+[[kv_namespaces]]
+binding = "QUIZ_RESULTS"
+id = "COLOQUE_AQUI_O_ID_DO_KV"
+
+# O SECRET é definido com: npx wrangler secret put SECRET
+# (nunca commitar o segredo neste arquivo — o repositório é público)
