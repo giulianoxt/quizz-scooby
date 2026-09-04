@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Quiz Scooby-Doo · Festa do Theo</title>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://giulianoxt.github.io/quizz-scooby/">
+<meta property="og:title" content="Quiz Scooby-Doo · Festa do Theo 🐾">
+<meta property="og:description" content="Qual personagem da Turma do Scooby é mais parecido com você? São só 7 perguntinhas!">
+<meta property="og:image" content="https://giulianoxt.github.io/quizz-scooby/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quiz Scooby-Doo · Festa do Theo 🐾">
+<meta name="twitter:description" content="Qual personagem da Turma do Scooby é mais parecido com você? São só 7 perguntinhas!">
+<meta name="twitter:image" content="https://giulianoxt.github.io/quizz-scooby/img/og-card.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
@@ -71,13 +82,22 @@ body{
 .kicker{font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#8a6a45;margin-bottom:4px}
 h1{
   font-family:'Luckiest Guy',cursive;
-  font-size:44px;line-height:1;
-  color:var(--green);
+  font-size:clamp(18px,4.6vw,24px);
+  line-height:1.1;
+  color:var(--orange);
   text-shadow:2px 2px 0 var(--line),4px 4px 0 rgba(0,0,0,.25);
-  letter-spacing:1px;
-  margin-bottom:6px;
+  letter-spacing:2px;
+  margin-bottom:10px;
 }
-h1 .of{font-size:20px;color:var(--orange);text-shadow:1px 1px 0 var(--line)}
+h1 .of{
+  display:block;
+  font-size:clamp(44px,11vw,58px);
+  color:var(--green);
+  text-shadow:3px 3px 0 var(--line),5px 5px 0 rgba(0,0,0,.25);
+  letter-spacing:1px;
+  line-height:1.02;
+  margin-top:2px;
+}
 h2{
   font-family:'Luckiest Guy',cursive;
   font-size:24px;line-height:1.15;
@@ -221,7 +241,7 @@ h2{
     <section class="screen active" id="scr-start">
       <span class="eyebrow">🎂 Para a festa do Theo</span>
       <div class="kicker">Quiz de personalidade</div>
-      <h1>QUIZ <span class="of">SCOOBY-</span>DOO</h1>
+      <h1>QUIZ <span class="of">SCOOBY-DOO</span></h1>
       <p class="sub">Qual personagem da Turma do Scooby é mais parecido com você? São só 7 perguntinhas — escolha a resposta que parece mais com você, não a “mais certinha”.</p>
       <div class="gang" aria-hidden="true">
         <span class="chip"><img src="img/faces/salsicha.png" alt=""></span>
