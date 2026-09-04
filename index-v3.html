@@ -180,6 +180,35 @@ h2{
   border:2px solid var(--line);overflow:hidden;background:#fff;
 }
 .opt .mini img{width:100%;height:100%;object-fit:cover;display:block}
+.tie-opts{gap:12px}
+.tie-opt{
+  display:flex;align-items:center;gap:14px;text-align:left;
+  width:100%;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;line-height:1.3;
+  color:var(--ink);background:#fff;
+  border:3px solid var(--line);border-radius:16px;
+  box-shadow:0 4px 0 var(--line);
+  padding:12px 14px;cursor:pointer;
+  transition:transform .08s ease, box-shadow .08s ease, background .15s ease;
+}
+.tie-opt:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.tie-opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.tie-opt.sel{background:#d9f5d3;border-color:var(--green-dark);box-shadow:0 3px 0 var(--green-dark)}
+.tie-opt .bigface{
+  flex:0 0 92px;height:92px;
+  border:3px solid var(--line);border-radius:50%;
+  box-shadow:0 4px 0 var(--line);
+  overflow:hidden;background:#fff;
+}
+.tie-opt .bigface img{width:100%;height:100%;object-fit:cover;display:block}
+.tie-opt .tinfo{flex:1;display:flex;flex-direction:column}
+.tie-opt .tname{
+  font-family:'Luckiest Guy',cursive;font-size:22px;line-height:1;
+  color:var(--green);text-shadow:1.5px 1.5px 0 var(--line);margin-bottom:3px;
+}
+.tie-opt .tfrase{font-size:13.5px;font-weight:800;color:#6b4f35;line-height:1.35}
+.tie-opt .check{margin-left:auto;font-size:20px;color:var(--green-dark);font-weight:900;opacity:0}
+.tie-opt.sel .check{opacity:1}
 .backrow{display:flex;justify-content:flex-end;margin-top:14px}
 .backbtn{
   background:none;border:none;color:#8a6a45;font-family:'Nunito',sans-serif;
@@ -353,7 +382,7 @@ h2{
 
   /* frases do desempate — aparece só quando há empate */
   var TIEBREAK={
-    text:"Empate! Que legal — você tem duas caras na turma 😄 Escolha a frase que combina MAIS com você:",
+    text:"Quem é mais você? 👇 Escolhe a frase que combina MAIS:",
     frase:[
       "“Prefiro rir e relaxar primeiro”",
       "“Antes de tudo, fico do lado do meu amigo”",
@@ -455,17 +484,24 @@ h2{
     focusQuestion();
   }
 
-  /* ---- pergunta de desempate ---- */
+  /* ---- rodada final (desempate) ---- */
+  function humanJoin(arr){
+    if(arr.length===1) return arr[0];
+    if(arr.length===2) return arr[0]+' e '+arr[1];
+    return arr.slice(0,-1).join(', ')+' e '+arr[arr.length-1];
+  }
   function renderTiebreak(){
-    qcount.textContent='DESEMPATE ⚡';
+    qcount.textContent='RODADA FINAL ⚡';
     qmeta.textContent='Só mais uma!';
-    var html='<div class="question">'+TIEBREAK.text+'</div><div class="opts">';
-    var tieLetter=["A","B","C","D","E"];
+    var names=tiebreakCats.map(function(c){return CHARS[c].k;});
+    var copy='Você tá entre '+humanJoin(names)+'! '+TIEBREAK.text;
+    var html='<div class="question">'+copy+'</div><div class="opts tie-opts">';
     for (var i=0;i<tiebreakCats.length;i++){
       var c=tiebreakCats[i];
-      html+='<button class="opt" data-cat="'+c+'">'
-          + '<span class="mini"><img src="'+CHARS[c].img+'" alt=""></span>'
-          + '<span class="otext">'+TIEBREAK.frase[c]+'</span>'
+      html+='<button class="tie-opt" data-cat="'+c+'">'
+          + '<span class="bigface"><img src="'+CHARS[c].img+'" alt=""></span>'
+          + '<span class="tinfo"><span class="tname">'+CHARS[c].k+'</span>'
+          + '<span class="tfrase">'+TIEBREAK.frase[c]+'</span></span>'
           + '<span class="check">✔</span></button>';
     }
     html+='</div>';
@@ -488,10 +524,10 @@ h2{
   }
 
   qwrap.addEventListener('click',function(ev){
-    var btn=ev.target.closest('.opt');
+    var btn=ev.target.closest('.opt,.tie-opt');
     if(!btn) return;
     var cat=+btn.dataset.cat;
-    var opts=qwrap.querySelectorAll('.opt');
+    var opts=qwrap.querySelectorAll('.opt,.tie-opt');
     for (var o=0;o<opts.length;o++) opts[o].classList.remove('sel');
     btn.classList.add('sel');
     if(tiebreakCats.length>0){
