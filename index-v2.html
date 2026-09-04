@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz Scooby-Doo · Festa do Theo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#221a54;
+  --night2:#181140;
+  --cream:#fff4d6;
+  --ink:#3a2518;
+  --green:#5dc94f;
+  --green-dark:#3d9a31;
+  --gold:#f5c04a;
+  --orange:#f2913d;
+  --purple:#9b5de5;
+  --line:#2b1d16;
+  --chunk:0 5px 0 var(--line);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Nunito',system-ui,sans-serif;
+  font-weight:800;
+  color:var(--cream);
+  background:linear-gradient(180deg,var(--night) 0%,var(--night2) 100%);
+  overflow-x:hidden;
+}
+.stage{
+  min-height:100dvh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px 16px calc(28px + env(safe-area-inset-bottom));
+  position:relative;
+}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{
+  position:absolute;border-radius:50%;background:#fff;
+  animation:twinkle 3s ease-in-out infinite;
+}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.9}}
+.card{
+  position:relative;z-index:1;
+  width:100%;max-width:520px;
+  background:var(--cream);
+  color:var(--ink);
+  border:3px solid var(--line);
+  border-radius:26px;
+  box-shadow:var(--chunk);
+  padding:22px 20px 24px;
+}
+.screen{display:none}
+.screen.active{display:block}
+
+.eyebrow{
+  display:inline-block;
+  background:var(--gold);
+  color:var(--ink);
+  font-size:12px;font-weight:900;letter-spacing:1px;
+  text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;
+  border:2px solid var(--line);
+  box-shadow:0 3px 0 var(--line);
+  margin-bottom:10px;
+}
+.kicker{font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#8a6a45;margin-bottom:4px}
+h1{
+  font-family:'Luckiest Guy',cursive;
+  font-size:44px;line-height:1;
+  color:var(--green);
+  text-shadow:2px 2px 0 var(--line),4px 4px 0 rgba(0,0,0,.25);
+  letter-spacing:1px;
+  margin-bottom:6px;
+}
+h1 .of{font-size:20px;color:var(--orange);text-shadow:1px 1px 0 var(--line)}
+h2{
+  font-family:'Luckiest Guy',cursive;
+  font-size:24px;line-height:1.15;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.sub{font-size:15px;font-weight:800;color:#6b4f35;line-height:1.45}
+
+.gang{display:flex;justify-content:space-between;gap:6px;margin:16px 0 18px}
+.gang .chip{
+  width:52px;height:52px;
+  border:2px solid var(--line);border-radius:50%;
+  box-shadow:0 3px 0 var(--line);
+  overflow:hidden;background:#fff;
+}
+.gang .chip img{width:100%;height:100%;object-fit:cover;display:block}
+
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;
+  color:#fff;background:var(--green);
+  border:3px solid var(--line);border-radius:16px;
+  box-shadow:0 5px 0 var(--line);
+  padding:14px;cursor:pointer;
+  transition:transform .08s ease, box-shadow .08s ease;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--line)}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn.orange{background:var(--orange)}
+.btn.ghost{background:#fff;color:var(--ink)}
+
+.paws{display:flex;justify-content:space-between;gap:4px;margin-bottom:12px}
+.paw{
+  flex:1;max-width:26px;aspect-ratio:1.5;
+  color:rgba(58,37,24,.18);
+  transition:color .25s ease, transform .25s ease;
+}
+.paw.done{color:var(--green)}
+.progress-line{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.qcount{font-family:'Luckiest Guy',cursive;font-size:16px;color:var(--orange)}
+.qmeta{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:#8a6a45}
+
+.qwrap{position:relative}
+.q.pop{animation:qin .28s ease}
+@keyframes qin{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+.question{
+  font-size:19px;font-weight:900;line-height:1.35;
+  background:#fff;border:3px solid var(--line);border-radius:16px;
+  box-shadow:0 4px 0 var(--line);
+  padding:14px 14px 16px;margin-bottom:14px;
+  min-height:80px;display:flex;align-items:center;
+}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{
+  display:flex;align-items:center;gap:12px;text-align:left;
+  width:100%;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;line-height:1.3;
+  color:var(--ink);background:#fff;
+  border:3px solid var(--line);border-radius:14px;
+  box-shadow:0 4px 0 var(--line);
+  padding:10px 12px;cursor:pointer;
+  transition:transform .08s ease, box-shadow .08s ease, background .15s ease;
+}
+.opt:active{transform:translateY(2px);box-shadow:0 2px 0 var(--line)}
+.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.opt .letter{
+  flex:0 0 34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Luckiest Guy',cursive;font-size:18px;color:var(--ink);
+  background:var(--gold);border:2px solid var(--line);border-radius:10px;
+  box-shadow:0 3px 0 var(--line);
+}
+.opt.sel{background:#d9f5d3;border-color:var(--green-dark);box-shadow:0 3px 0 var(--green-dark)}
+.opt.sel .letter{background:var(--green);color:#fff}
+.opt .check{margin-left:auto;font-size:18px;color:var(--green-dark);font-weight:900;opacity:0}
+.opt.sel .check{opacity:1}
+.backrow{display:flex;justify-content:flex-end;margin-top:14px}
+.backbtn{
+  background:none;border:none;color:#8a6a45;font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:900;text-decoration:underline;cursor:pointer;padding:6px;
+}
+.backbtn:focus-visible{outline:3px solid var(--gold);border-radius:4px}
+
+.result-hero{text-align:center;margin-bottom:14px}
+.rface{
+  width:130px;height:130px;margin:0 auto 10px;
+  border:4px solid var(--line);border-radius:50%;
+  box-shadow:0 5px 0 var(--line);
+  overflow:hidden;background:#fff;
+}
+.rface img{width:100%;height:100%;object-fit:cover;display:block}
+.rface.two{display:flex}
+.rface.two span{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.rface.two img{width:100%;height:100%;object-fit:cover}
+.rname{
+  font-family:'Luckiest Guy',cursive;font-size:34px;line-height:1;color:var(--green);
+  text-shadow:2px 2px 0 var(--line),4px 4px 0 rgba(0,0,0,.2);
+}
+.rtag{font-size:13px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:#8a6a45;margin-top:6px}
+.rtext{font-size:15px;font-weight:800;line-height:1.5;color:#6b4f35;margin-bottom:14px}
+.rbloc{background:#fff;border:3px solid var(--line);border-radius:14px;box-shadow:0 4px 0 var(--line);padding:12px 14px;margin-bottom:10px}
+.rbloc .t{font-family:'Luckiest Guy',cursive;font-size:14px;color:var(--orange);margin-bottom:4px}
+.rbloc p{font-size:14px;font-weight:800;color:#6b4f35;line-height:1.45}
+.ractions{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.confetti i{
+  position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;
+  animation:fall linear forwards;
+}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.6}}
+
+.foot{
+  position:relative;z-index:1;text-align:center;
+  font-size:12px;font-weight:800;color:rgba(255,244,214,.55);
+  margin-top:18px;letter-spacing:.3px;
+}
+.toast{
+  position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:var(--cream);font-weight:900;font-size:14px;
+  padding:10px 18px;border-radius:999px;border:2px solid var(--gold);
+  transition:transform .25s ease;z-index:60;opacity:0;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="stars" id="stars" aria-hidden="true"></div>
+
+<main class="stage">
+  <div class="card">
+
+    <section class="screen active" id="scr-start">
+      <span class="eyebrow">🎂 Para a festa do Theo</span>
+      <div class="kicker">Quiz de personalidade</div>
+      <h1>QUIZ <span class="of">SCOOBY-</span>DOO</h1>
+      <p class="sub">Qual personagem da Turma do Scooby é mais parecido com você? São só 7 perguntinhas — escolha a resposta que parece mais com você, não a “mais certinha”.</p>
+      <div class="gang" aria-hidden="true">
+        <span class="chip"><img src="img/salsicha.png" alt=""></span>
+        <span class="chip"><img src="img/scooby.png" alt=""></span>
+        <span class="chip"><img src="img/velma.png" alt=""></span>
+        <span class="chip"><img src="img/fred.png" alt=""></span>
+        <span class="chip"><img src="img/daphne.png" alt=""></span>
+      </div>
+      <button class="btn" id="btn-start">▶ COMEÇAR A INVESTIGAÇÃO</button>
+    </section>
+
+    <section class="screen" id="scr-quiz">
+      <div class="paws" id="paws" aria-hidden="true"></div>
+      <div class="progress-line">
+        <span class="qcount" id="qcount">PERGUNTA 1/7</span>
+        <span class="qmeta" id="qmeta">Escolha a sua</span>
+      </div>
+      <div class="qwrap" id="qwrap"></div>
+      <div class="backrow"><button class="backbtn" id="btn-back">← Voltar</button></div>
+    </section>
+
+    <section class="screen" id="scr-result">
+      <div id="rbox"></div>
+    </section>
+
+  </div>
+</main>
+
+<div class="foot">Feito com 🧡 para o aniversário do Theo · Scooby-Doo é da Hanna-Barbera</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* estrelas */
+  var starsEl = document.getElementById('stars');
+  for (var i=0;i<30;i++){
+    var s=document.createElement('span');
+    s.className='star';
+    var size=(Math.random()*2.4+1).toFixed(1);
+    s.style.width=size+'px';s.style.height=size+'px';
+    s.style.left=(Math.random()*100).toFixed(2)+'%';
+    s.style.top=(Math.random()*100).toFixed(2)+'%';
+    s.style.animationDelay=(Math.random()*3).toFixed(2)+'s';
+    starsEl.appendChild(s);
+  }
+
+  /* perguntas — cada opção guarda a CATEGORIA (cat), não a letra.
+     As letras são só posição visual: embaralhamos a ordem a cada visita,
+     assim a Velma não fica sempre na 3ª e o cálculo continua certo. */
+  var RAW_QUESTIONS=[
+    {q:"Quando aparece um problema, o que você faz?",
+     o:[
+       {cat:0,t:"Faço uma piada pra relaxar"},
+       {cat:1,t:"Chamo um amigo pra me ajudar"},
+       {cat:2,t:"Observo tudo com atenção"},
+       {cat:3,t:"Faço um plano pra resolver"},
+       {cat:4,t:"Percebo como todo mundo está se sentindo"}
+     ]},
+    {q:"No seu grupo, você é quem…",
+     o:[
+       {cat:0,t:"Faz todo mundo rir"},
+       {cat:1,t:"Fica do lado dos amigos"},
+       {cat:2,t:"Repara nos detalhes"},
+       {cat:3,t:"Toma a frente e organiza"},
+       {cat:4,t:"Ajuda todo mundo a conversar"}
+     ]},
+    {q:"Você acha uma porta misteriosa. O que faz?",
+     o:[
+       {cat:0,t:"Fico com medo, mas vou com um amigo"},
+       {cat:1,t:"Não quero entrar, mas não largo meu amigo"},
+       {cat:2,t:"Procuro pistas antes de abrir"},
+       {cat:3,t:"Penso num plano seguro"},
+       {cat:4,t:"Olho tudo com calma antes de decidir"}
+     ]},
+    {q:"Qual você prefere?",
+     o:[
+       {cat:0,t:"Rir e fazer bagunça divertida"},
+       {cat:1,t:"Brincar com os amigos"},
+       {cat:2,t:"Descobrir coisas e resolver enigmas"},
+       {cat:3,t:"Organizar a brincadeira"},
+       {cat:4,t:"Criar algo e cuidar dos amigos"}
+     ]},
+    {q:"Quando você sente medo…",
+     o:[
+       {cat:0,t:"Faço uma piada pra me sentir melhor"},
+       {cat:1,t:"Fico perto de quem eu confio"},
+       {cat:2,t:"Tento entender o que está acontecendo"},
+       {cat:3,t:"Penso no que posso fazer"},
+       {cat:4,t:"Converso com alguém"}
+     ]},
+    {q:"Dois amigos estão brigando. Você…",
+     o:[
+       {cat:0,t:"Tento descontrair com uma piada"},
+       {cat:1,t:"Fico por perto e ofereço apoio"},
+       {cat:2,t:"Quero entender o que aconteceu"},
+       {cat:3,t:"Sugiro uma solução"},
+       {cat:4,t:"Escuto os dois lados"}
+     ]},
+    {q:"Qual frase é mais você?",
+     o:[
+       {cat:0,t:"“Rir sempre ajuda!”"},
+       {cat:1,t:"“Não abandono quem eu amo!”"},
+       {cat:2,t:"“Tudo merece uma boa investigação!”"},
+       {cat:3,t:"“Com um plano, resolvo qualquer coisa!”"},
+       {cat:4,t:"“Com cuidado e carinho, tudo fica melhor!”"}
+     ]}
+  ];
+
+  var CHARS=[
+    {k:"Salsicha", img:"img/salsicha.png", tag:"O rei dos lanches e das risadas",
+     text:"Você é espontâneo e bem-humorado. Gosta das coisas boas e simples da vida e sempre encontra um jeito divertido de seguir em frente — mesmo com medo, você vai atrás quando um amigo precisa.",
+     fortes:"humor, criatividade, leveza e amigos de verdade",
+     desafio:"confiar mais na própria coragem"},
+    {k:"Scooby-Doo", img:"img/scooby.png", tag:"O cachorro leal e corajoso",
+     text:"Você é carinhoso, divertido e adora seus amigos. Gosta de se sentir seguro e enfrenta qualquer coisa do lado de quem confia. Mesmo com medo, a amizade sempre fala mais alto — Scooby-Dooby-Doo!",
+     fortes:"lealdade, carinho, companheirismo e diversão",
+     desafio:"acreditar mais na própria coragem"},
+    {k:"Velma", img:"img/velma.png", tag:"A cérebro da turma · Jinkies!",
+     text:"Você é curioso e observador. Adora entender como as coisas funcionam e presta atenção nos detalhes que todo mundo deixa passar. Com você, nenhum mistério fica escondido.",
+     fortes:"inteligência, curiosidade e atenção aos detalhes",
+     desafio:"lembrar que nem tudo se resolve só com a lógica"},
+    {k:"Fred", img:"img/fred.png", tag:"O líder da turma",
+     text:"Você é organizado e determinado. Gosta de transformar ideias em planos e tomar a frente quando aparece um desafio. Com um bom plano, você enfrenta qualquer encrenca!",
+     fortes:"iniciativa, organização e liderança",
+     desafio:"ouvir a ideia dos outros também"},
+    {k:"Daphne", img:"img/daphne.png", tag:"A detetive do coração",
+     text:"Você é sensível e ligado nas pessoas. Percebe quando alguém está triste ou precisando de ajuda e adora cuidar dos amigos. Coragem e carinho andam juntas com você.",
+     fortes:"empatia, criatividade e percepção",
+     desafio:"não esquecer de cuidar de você também"}
+  ];
+
+  var LETTERS=["A","B","C","D","E"];
+  var QUESTIONS=[];          // perguntas já embaralhadas
+  var answers=[];            // categorias escolhidas (cat)
+  var cur=0;
+
+  /* embaralhar opções de cada pergunta (Fisher-Yates) */
+  function shuffle(arr){
+    for (var i=arr.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1));
+      var tmp=arr[i];arr[i]=arr[j];arr[j]=tmp;
+    }
+    return arr;
+  }
+  function build(){
+    QUESTIONS=RAW_QUESTIONS.map(function(q){
+      var opts=q.o.slice();
+      opts=shuffle(opts).map(function(o,idx){
+        return {cat:o.cat, t:o.t, letter:LETTERS[idx]};
+      });
+      return {q:q.q, o:opts};
+    });
+  }
+
+  var scrStart=document.getElementById('scr-start');
+  var scrQuiz=document.getElementById('scr-quiz');
+  var scrResult=document.getElementById('scr-result');
+  var qcount=document.getElementById('qcount');
+  var qwrap=document.getElementById('qwrap');
+  var pawsEl=document.getElementById('paws');
+
+  var PAW_SVG='<svg viewBox="0 0 24 16" preserveAspectRatio="xMidYMid meet"><ellipse cx="12" cy="13.4" rx="5.6" ry="2.6"/><circle cx="4.6" cy="9" r="2.4"/><circle cx="9.4" cy="6.4" r="2.4"/><circle cx="14.6" cy="6.4" r="2.4"/><circle cx="19.4" cy="9" r="2.4"/></svg>';
+  for (var p=0;p<RAW_QUESTIONS.length;p++){
+    var span=document.createElement('span');
+    span.className='paw';
+    span.innerHTML=PAW_SVG;
+    span.style.fill='currentColor';
+    span.style.display='block';
+    pawsEl.appendChild(span);
+  }
+  var paws=pawsEl.children;
+
+  function show(id){
+    scrStart.classList.toggle('active',id==='start');
+    scrQuiz.classList.toggle('active',id==='quiz');
+    scrResult.classList.toggle('active',id==='result');
+  }
+
+  function renderQuestion(){
+    var q=QUESTIONS[cur];
+    qcount.textContent='PERGUNTA '+(cur+1)+'/'+QUESTIONS.length;
+    document.getElementById('qmeta').textContent='Escolha a sua';
+    var html='<div class="question">'+q.q+'</div><div class="opts">';
+    for (var i=0;i<q.o.length;i++){
+      var sel=(answers[cur]===q.o[i].cat);
+      html+='<button class="opt'+(sel?' sel':'')+'" data-cat="'+q.o[i].cat+'">'
+          + '<span class="letter">'+q.o[i].letter+'</span>'
+          + '<span class="otext">'+q.o[i].t+'</span>'
+          + '<span class="check">✔</span></button>';
+    }
+    html+='</div>';
+    qwrap.innerHTML=html;
+    var wrap=qwrap.firstElementChild;
+    wrap.classList.remove('pop');
+    void wrap.offsetWidth;
+    wrap.classList.add('pop');
+    for (var p=0;p<paws.length;p++) paws[p].classList.toggle('done',p<cur||answers[p]!=null);
+    document.getElementById('btn-back').style.visibility=(cur===0?'hidden':'visible');
+    qwrap.querySelector('.question').setAttribute('tabindex','-1');
+    qwrap.querySelector('.question').focus({preventScroll:true});
+  }
+
+  qwrap.addEventListener('click',function(ev){
+    var btn=ev.target.closest('.opt');
+    if(!btn) return;
+    var cat=+btn.dataset.cat;
+    answers[cur]=cat;
+    var opts=qwrap.querySelectorAll('.opt');
+    for (var o=0;o<opts.length;o++) opts[o].classList.remove('sel');
+    btn.classList.add('sel');
+    updatePaws();
+    setTimeout(function(){
+      if(cur<QUESTIONS.length-1){ cur++; renderQuestion(); }
+      else{ showResult(); }
+    },320);
+  });
+
+  function updatePaws(){
+    for (var p=0;p<paws.length;p++) paws[p].classList.toggle('done',p<=cur);
+  }
+
+  document.getElementById('btn-back').addEventListener('click',function(){
+    if(cur>0){ answers[cur]=null; cur--; renderQuestion(); }
+  });
+
+  document.getElementById('btn-start').addEventListener('click',function(){
+    build();
+    answers=[]; cur=0;
+    for(var i=0;i<QUESTIONS.length;i++) answers.push(null);
+    show('quiz');
+    renderQuestion();
+  });
+
+  function showResult(){
+    show('result');
+    var count=[0,0,0,0,0];
+    for(var i=0;i<answers.length;i++) count[answers[i]]++;
+    var max=0;
+    for(var k=0;k<5;k++) if(count[k]>max) max=count[k];
+    var winners=[];
+    for(var k2=0;k2<5;k2++) if(count[k2]===max) winners.push(k2);
+
+    var box=document.getElementById('rbox');
+    var html='<div class="result-hero">';
+    if(winners.length===1){
+      var c=CHARS[winners[0]];
+      html+='<span class="kicker">Seu personagem é…</span>'
+          + '<div class="rface"><img src="'+c.img+'" alt="'+c.k+'" onerror="this.outerHTML=\'<span style=font-size:70px>🐾</span>\'"></div>'
+          + '<span class="rname">'+c.k+'</span>'
+          + '<span class="rtag">'+c.tag+'</span></div>'
+          + '<p class="rtext">'+c.text+'</p>'
+          + '<div class="rbloc"><div class="t">⭐ Pontos fortes</div><p>'+c.fortes+'</p></div>'
+          + '<div class="rbloc"><div class="t">🎯 Seu desafio</div><p>'+c.desafio+'</p></div>';
+      shareText='Eu fiz o Quiz Scooby-Doo e sou… '+c.k+'! 🐾 Qual personagem da turma é você?';
+    }else{
+      var cs=winners.map(function(w){return CHARS[w];});
+      var faces='';
+      for(var f=0;f<cs.length;f++) faces+='<span><img src="'+cs[f].img+'" alt="'+cs[f].k+'" onerror="this.outerHTML=\'🐾\'"></span>';
+      html+='<span class="kicker">Você é um misto de…</span>'
+          + '<div class="rface two">'+faces+'</div>'
+          + '<span class="rname">'+cs[0].k+' + '+cs[1].k+'</span>'
+          + '<span class="rtag">Empate! Você reúne os dois</span></div>'
+          + '<p class="rtext">'+cs[0].text+'</p>'
+          + '<div class="rbloc"><div class="t">➕ E também…</div><p>'+cs[1].text+'</p></div>'
+          + '<p class="rtext" style="margin-top:12px">E olha: ser mais de um personagem é ótimo — mais talentos, mais diversão!</p>';
+      shareText='Eu fiz o Quiz Scooby-Doo e sou um misto de '+cs[0].k+' + '+cs[1].k+'! 🐾';
+    }
+    html+='<div class="ractions">'
+        + '<button class="btn" id="btn-share">📣 COMPARTILHAR MEU RESULTADO</button>'
+        + '<button class="btn ghost" id="btn-restart">↻ Refazer o quiz</button>'
+        + '</div>';
+    box.innerHTML=html;
+    burst();
+    document.getElementById('btn-share').addEventListener('click',share);
+    document.getElementById('btn-restart').addEventListener('click',function(){
+      build();
+      answers=[]; cur=0;
+      for(var i=0;i<QUESTIONS.length;i++) answers.push(null);
+      show('quiz');
+      renderQuestion();
+    });
+  }
+  var shareText='';
+
+  function share(){
+    var url=location.href.split('#')[0];
+    var text=shareText+' '+url;
+    if(navigator.share){
+      navigator.share({title:'Quiz Scooby-Doo',text:text}).catch(function(){});
+    }else{
+      function done(){ toast('Resultado copiado! 📋'); }
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done,function(){
+          fallbackCopy(text);done();
+        });
+      }else{ fallbackCopy(text); done(); }
+    }
+  }
+  function fallbackCopy(text){
+    var ta=document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  var toastTimer=null;
+  function toast(msg){
+    var t=document.getElementById('toast');
+    t.textContent=msg;t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){t.classList.remove('show');},2200);
+  }
+
+  function burst(){
+    var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduced) return;
+    var box=document.createElement('div');
+    box.className='confetti';
+    var colors=['#5dc94f','#f5c04a','#f2913d','#9b5de5','#fff4d6'];
+    for(var i=0;i<34;i++){
+      var p=document.createElement('i');
+      p.style.left=(Math.random()*100)+'%';
+      p.style.background=colors[Math.floor(Math.random()*colors.length)];
+      p.style.animationDuration=((Math.random()*1.6)+1.6)+'s';
+      p.style.animationDelay=((Math.random()*.5))+'s';
+      p.style.transform='rotate('+(Math.random()*180)+'deg)';
+      box.appendChild(p);
+    }
+    document.body.appendChild(box);
+    setTimeout(function(){box.remove();},4200);
+  }
+
+})();
+</script>
+</body>
+</html>
